@@ -21,6 +21,13 @@ target_link_libraries(cmake_bug
         Qt::Core5Compat
 )
 
+if (DEFINED ENV{GITHUB_OUTPUT})
+    file(APPEND
+        "$ENV{GITHUB_OUTPUT}"
+        "config_version=${PROJECT_VERSION}\n"
+    )
+endif()
+
 install(TARGETS cmake_bug
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
