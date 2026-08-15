@@ -7,7 +7,7 @@ project(cmake_bug
 
 message(STATUS "CMake version: ${CMAKE_VERSION}")
 
-find_package(Qt6 6.11 REQUIRED COMPONENTS Core Core5Compat)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Core5Compat)
 
 qt_standard_project_setup()
 

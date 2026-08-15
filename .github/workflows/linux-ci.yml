@@ -10,7 +10,7 @@ on:
 env:
   BUILD_TYPE: RelWithDebInfo
 
-  jobs:
+jobs:
   build:
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ env:
           - { icon: '🟨', arch: "x86_64", os: "ubuntu-24.04" }
           - { icon: '🟩', arch: "x86_64", os: "ubuntu-22.04" }
     runs-on: ${{ matrix.os }}
-    name: '${{ matrix.icon }} Linux ${{ matrix.os }}'
+    name: '${{ matrix.icon }} ${{ matrix.os }}'
 
     steps:
     - uses: actions/checkout@v7
