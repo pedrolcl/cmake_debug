@@ -1,0 +1,49 @@
+name: Linux CI
+
+on:
+  push:
+    branches: [ "devel", "main" ]
+  pull_request:
+    branches: [ "devel", "main" ]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: RelWithDebInfo
+
+  jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { icon: '🟥', arch: "x86_64", os: "ubuntu-26.04" }
+          - { icon: '🟨', arch: "x86_64", os: "ubuntu-24.04" }
+          - { icon: '🟩', arch: "x86_64", os: "ubuntu-22.04" }
+    runs-on: ${{ matrix.os }}
+    name: '${{ matrix.icon }} Linux ${{ matrix.os }}'
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: '${{ matrix.icon }} Install Qt'
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.11.1'
+        modules: qt5compat
+
+    - name: '${{ matrix.icon }} Configure CMake'
+      id: configuration
+      run: >
+        cmake -B ${{github.workspace}}/build
+        -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_INSTALL_LIBDIR=lib
+        -DCMAKE_INSTALL_RPATH="\$ORIGIN/../lib"
+
+    - name: '${{ matrix.icon }} Build'
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: '${{ matrix.icon }} Install'
+      env:
+        DESTDIR: ${{github.workspace}}/cmakebug-v${{steps.configuration.outputs.config_version}}-${{matrix.os}}
+      run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
