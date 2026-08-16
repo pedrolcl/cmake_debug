@@ -16,6 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        codecs: [ON, OFF]
         include:
           - { icon: '🟧', arch: "win64", os: "windows-2025" }
           - { icon: '🟦', arch: "win64", os: "windows-2022" }
@@ -41,6 +42,7 @@ jobs:
       id: configuration
       run: >
         cmake -G Ninja -B ${{github.workspace}}/build
+        -DUSE_TEXT_CODECS=${{matrix.codecs}}
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
         -DCMAKE_INSTALL_PREFIX=${{env.INSTALL_LOCATION}}
 
