@@ -22,7 +22,7 @@ jobs:
           - { icon: '🟦', os: "windows-2022" }
           - { icon: '🟧', os: "windows-2025" }
     runs-on: ${{ matrix.os }}
-    name: '${{ matrix.icon }} MSVC ${{ matrix.os }}'
+    name: '${{ matrix.icon }} MSVC ${{ matrix.os }} codecs=${{ matrix.codecs }}'
 
     steps:
     - uses: actions/checkout@v7
@@ -43,14 +43,15 @@ jobs:
     - name: '${{ matrix.icon }} Configure CMake'
       id: configuration
       run: >
-        cmake -G Ninja -B ${{github.workspace}}/build
+        cmake -B ${{github.workspace}}/build
+        -G Ninja -DCMAKE_VERBOSE_MAKEFILE=ON
         -DUSE_TEXT_CODECS=${{matrix.codecs}}
         -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}}
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
         -DCMAKE_INSTALL_PREFIX=${{env.INSTALL_LOCATION}}
 
     - name: '${{ matrix.icon }} Build'
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -- VERBOSE=1
 
     - name: '${{ matrix.icon }} Install'
       run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

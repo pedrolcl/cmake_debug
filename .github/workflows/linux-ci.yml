@@ -21,7 +21,7 @@ jobs:
           - { icon: '🟩', os: "ubuntu-22.04" }
           - { icon: '🟥', os: "ubuntu-26.04" }
     runs-on: ${{ matrix.os }}
-    name: '${{ matrix.icon }} ${{ matrix.os }}'
+    name: '${{ matrix.icon }} ${{ matrix.os }} codecs=${{ matrix.codecs }}'
 
     steps:
     - uses: actions/checkout@v7
@@ -38,6 +38,7 @@ jobs:
       id: configuration
       run: >
         cmake -B ${{github.workspace}}/build
+        -G Ninja -DCMAKE_VERBOSE_MAKEFILE=ON
         -DUSE_TEXT_CODECS=${{matrix.codecs}}
         -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}}
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
