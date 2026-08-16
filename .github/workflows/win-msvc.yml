@@ -22,7 +22,7 @@ jobs:
           - { icon: '🟦', os: "windows-2022" }
           - { icon: '🟧', os: "windows-2025" }
     runs-on: ${{ matrix.os }}
-    name: '${{ matrix.icon }} MSVC ${{ matrix.os }} codecs=${{ matrix.codecs }}'
+    name: '${{ matrix.icon }} ${{ matrix.os }} codecs=${{ matrix.codecs }}'
 
     steps:
     - uses: actions/checkout@v7
@@ -51,7 +51,7 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=${{env.INSTALL_LOCATION}}
 
     - name: '${{ matrix.icon }} Build'
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -- VERBOSE=1
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --verbose
 
     - name: '${{ matrix.icon }} Install'
       run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
