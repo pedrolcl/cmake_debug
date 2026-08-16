@@ -7,6 +7,8 @@ project(cmake_debug
 
 option(USE_TEXT_CODECS "Use Qt::Core5Compat text codecs" OFF)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Core5Compat)
 
 message(STATUS "Using text codecs: ${USE_TEXT_CODECS}")
@@ -14,7 +16,11 @@ message(STATUS "CMake version: ${CMAKE_VERSION}")
 message(STATUS "CMake prefix: ${CMAKE_PREFIX_PATH}")
 message(STATUS "Qt version: ${Qt6_VERSION}")
 message(STATUS "Qt directory: ${Qt6_DIR}")
+message(STATUS "Qt root environment: $ENV{QT_ROOT_DIR}")
 message(STATUS "Qt qmake: ${QT_QMAKE_EXECUTABLE}")
+if (NOT QT_QMAKE_EXECUTABLE)
+  set(QT_QMAKE_EXECUTABLE "qmake")
+endif()
 
 execute_process(COMMAND ${QT_QMAKE_EXECUTABLE} "-query" "QT_INSTALL_PREFIX"
   OUTPUT_VARIABLE QT_PREFIX
@@ -60,7 +66,7 @@ install(TARGETS ${PROJECT_NAME}
 install(CODE "
   file(GET_RUNTIME_DEPENDENCIES
     EXECUTABLES $<TARGET_FILE:${PROJECT_NAME}>
-    DIRECTORIES ${QT_PREFIX} ${QT_LIBS}
+    DIRECTORIES ${QT_PREFIX} ${QT_LIBS} ${QT_ROOT_DIR}
     RESOLVED_DEPENDENCIES_VAR _r_deps
     UNRESOLVED_DEPENDENCIES_VAR _u_deps
     CONFLICTING_DEPENDENCIES_PREFIX _conflicts

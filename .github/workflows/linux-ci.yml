@@ -16,10 +16,11 @@ jobs:
       fail-fast: false
       matrix:
         codecs: [ON, OFF]
+        os: ["ubuntu-22.04", "ubuntu-24.04", "ubuntu-26.04"]
         include:
-          - { icon: '🟥', arch: "x86_64", os: "ubuntu-26.04" }
-          - { icon: '🟨', arch: "x86_64", os: "ubuntu-24.04" }
-          - { icon: '🟩', arch: "x86_64", os: "ubuntu-22.04" }
+          - { icon: '🟩', os: "ubuntu-22.04" }
+          - { icon: '🟨', os: "ubuntu-24.04" }
+          - { icon: '🟥', os: "ubuntu-26.04" }
     runs-on: ${{ matrix.os }}
     name: '${{ matrix.icon }} ${{ matrix.os }}'
 
@@ -37,6 +38,7 @@ jobs:
       run: >
         cmake -B ${{github.workspace}}/build
         -DUSE_TEXT_CODECS=${{matrix.codecs}}
+        -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}}
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
         -DCMAKE_INSTALL_PREFIX=/usr
         -DCMAKE_INSTALL_LIBDIR=lib

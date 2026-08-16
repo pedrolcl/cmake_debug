@@ -17,11 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         codecs: [ON, OFF]
+        os: ["windows-2022", "windows-2025"]
         include:
-          - { icon: '🟧', arch: "win64", os: "windows-2025" }
-          - { icon: '🟦', arch: "win64", os: "windows-2022" }
+          - { icon: '🟦', os: "windows-2022" }
+          - { icon: '🟧', os: "windows-2025" }
     runs-on: ${{ matrix.os }}
-    name: '${{ matrix.icon }} msvc ${{ matrix.os }}'
+    name: '${{ matrix.icon }} MSVC ${{ matrix.os }}'
 
     steps:
     - uses: actions/checkout@v7
@@ -36,13 +37,14 @@ jobs:
     - name: '${{ matrix.icon }} Setup MSVC'
       uses: TheMrMilchmann/setup-msvc-dev@v4
       with:
-        arch: ${{ matrix.arch }}
+        arch: "win64"
 
     - name: '${{ matrix.icon }} Configure CMake'
       id: configuration
       run: >
         cmake -G Ninja -B ${{github.workspace}}/build
         -DUSE_TEXT_CODECS=${{matrix.codecs}}
+        -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}}
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
         -DCMAKE_INSTALL_PREFIX=${{env.INSTALL_LOCATION}}
 
